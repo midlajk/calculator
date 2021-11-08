@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-6" style="margin-left: 100px;margin-top: 100px;">
+            <form action="">
+
+                <div id="newRow"></div>
+                <br>
+                <br>
+                <button style="height: 30px; width: 200px;" id="addRow">add</button>
+            </form>
+            <br>
+            <br>
+
+            <input type="time" name="" id="frtime" style="height: 35px; width: 200px;">
+            <button id="forwardtime" name="" id="" style="height: 35px; width: 200px;"> Forward Time</button>
+            <br>
+            <br>
+
+            <input type="time" name="" id="bktime" style="height: 35px; width: 200px;" value="forward">
+            <button id="backwardtime" name="" id="" style="height: 35px; width: 200px;"> Backward Time</button>
+
+
+        </div>
+        <div class="col-6" style="margin-left: 100px;margin-top: 100px;">
+            <h1>Forward time</h1>
+            <div id="forwardtimes"></div>
+        </div>
+        <div class="col-6" style="margin-left: 100px;margin-top: 100px;">
+            <h1>Reverse time</h1>
+            <div id="reversetimes"></div>
+        </div>
+    </div>
+    <script>
+        $("#addRow ").click(function() {
+            var html = '';
+            html += '<div id="inputFormRow" class="form-group row">';
+            html += '<div class="col-sm-12 mb-3 mb-sm-0 input-group">';
+            html += '<input id="newworker" style="height: 35px; width: 200px;" required type="text" name="newtime" class="form-control form-control-user " >';
+            html += '<div class="input-group-append">';
+            html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+            html += '</div>';
+            html += '</div>';
+            $('#newRow').append(html);
+            $('#submitbtn').show();
+        });
+        $(document).on('click', '#removeRow', function() {
+            $(this).closest('#inputFormRow').remove();
+        });
+        $(document).on('click', '#forwardtime', function() {
+            var data = document.getElementById('forwardtimes');
+            data.innerHTML = '';
+            x = document.getElementsByClassName('form-control')
+            h = x.length
+            r = document.getElementById('frtime').value;
+            let t = r; // hh:mm
+            let time = Number(t.split(':')[0]) * 60 * 60 * 1000 + Number(t.split(':')[1]) * 60 * 1000;
+
+            actualtime = [];
+            for (i = 0; i < h; i++) {
+                lastElement = actualtime[actualtime.length - 1];
+                if (Array.isArray(actualtime) && actualtime.length) {
+                    time = lastElement
+                }
+                newvalue = time + x[i].value * 60 * 1000
+                actualtime.push(newvalue)
+
+            }
+            for (j = 0; j < actualtime.length; j++) {
+                h = msToTime(actualtime[j])
+
+            }
+
+            function msToTime(s) {
+                function pad(n, z) {
+                    z = z || 2;
+                    return ('00' + n).slice(-z);
+                }
+                var ms = s % 1000;
+                s = (s - ms) / 1000;
+                var secs = s % 60;
+                s = (s - secs) / 60;
+                var mins = s % 60;
+                var hrs = (s - mins) / 60;
+                var h2s = document.createElement('h2');
+                h2s.innerHTML = pad(hrs) + ':' + pad(mins);
+                data.appendChild(h2s);
+                console.log(pad(hrs) + ':' + pad(mins))
+
+                return pad(hrs) + ':' + pad(mins);
+
+            }
+
+        });
+        $(document).on('click', '#backwardtime', function() {
+            var datas = document.getElementById('reversetimes');
+            datas.innerHTML = '';
+            x = document.getElementsByClassName('form-control')
+            h = x.length
+
+            r = document.getElementById('bktime').value;
+            let t = r; // hh:mm
+            let time = Number(t.split(':')[0]) * 60 * 60 * 1000 + Number(t.split(':')[1]) * 60 * 1000;
+            actualtime = [];
+            actualtime.push(time)
+            for (i = h; i > 1; i--) {
+                lastElement = actualtime[actualtime.length - 1];
+                if (Array.isArray(actualtime) && actualtime.length) {
+                    time = lastElement
+                }
+                newvalue = time + x[i - 1].value * 60 * 1000
+                actualtime.push(newvalue)
+
+            }
+
+            for (j = 0; j < actualtime.length; j++) {
+                h = msToTime(actualtime[j])
+
+            }
+
+            function msToTime(s) {
+                function pad(n, z) {
+                    z = z || 2;
+                    return ('00' + n).slice(-z);
+                }
+                var ms = s % 1000;
+                s = (s - ms) / 1000;
+                var secs = s % 60;
+                s = (s - secs) / 60;
+                var mins = s % 60;
+                var hrs = (s - mins) / 60;
+                console.log(pad(hrs) + ':' + pad(mins))
+                var h2s = document.createElement('h2');
+                h2s.innerHTML = pad(hrs) + ':' + pad(mins);
+                datas.appendChild(h2s);
+                return pad(hrs) + ':' + pad(mins);
+
+            }
+
+        });
+    </script>
+</body>
+
+</html>
